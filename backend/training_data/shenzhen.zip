@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title></title>
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="/assets/images/favicon.ico" type="image/ico"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <meta name="keywords" content="">
+  <meta name="baidu-site-verification" content="OFgD9P2U1N"/>
+  <meta name="yandex-verification" content="77520cf3038ed5a2"/>
+  <meta name="google-site-verification" content="jpincErNMV_4w__Q9mY-t949fHYFx8xEgL4LM9oRrNw"/>
+  <meta name="msvalidate.01" content="3CFD723BC959C86D2CF0E81EF5E605ED"/>
+  <link rel="canonical" href=""/>
+
+  <!-- Google Tag Manager --> <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start': new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0], j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src= 'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f); })(window,document,'script','dataLayer','GTM-59GQ6JK');</script> <!-- End Google Tag Manager -->
+
+<link rel="stylesheet" href="styles-4KF6LWIQ.css"></head>
+<body>
+
+	<!-- Google Tag Manager (noscript) --> <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-59GQ6JK" height="0" width="0" style="display:none;visibility:hidden" title="googletagmanager"></iframe></noscript><!-- End Google Tag Manager (noscript) -->	
+
+<!--
+<div style="
+    padding: 5px 20px;
+    border: solid 5px #54adf1;
+    background-color: #dedede;
+">
+    <div style="
+    font-size: 22px;
+    font-weight: bold;
+">NOTICE</div>
+    <p data-block-key="el0iq">Because of a lapse in government funding, the information on this website may not be up to date, transactions submitted via the website may not be processed, and the agency may not be able to respond to inquiries until appropriations are enacted. The NIH Clinical Center (the research hospital of NIH) is open. For more details about its operating status, please visit&nbsp;<a href="http://cc.nih.gov/">cc.nih.gov</a>. Updates regarding government operating status and resumption of normal operations can be found at&nbsp;<a href="https://www.opm.gov/">opm.gov</a>.</p>
+</div>
+-->
+<app-root></app-root>
+<script src="polyfills-SCHOHYNV.js" type="module"></script><script src="scripts-UTV6CO64.js" defer></script><script src="main-B2TBBBVR.js" type="module"></script></body>
+</html>

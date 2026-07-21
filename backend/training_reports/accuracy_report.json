@@ -1,0 +1,54 @@
+{
+  "timestamp": "2026-04-11T12:54:41.937119",
+  "dataset": {
+    "total_images": 400,
+    "tb_positive": 200,
+    "normal": 200,
+    "train": 280,
+    "val": 60,
+    "test": 60
+  },
+  "model": {
+    "architecture": "EfficientNetB0 + Clinical Symptom Branch (Multimodal Fusion)",
+    "image_size": 224,
+    "n_symptoms": 6,
+    "trainable_params": 174385,
+    "total_params": 4224298
+  },
+  "training": {
+    "phase1_epochs": 15,
+    "phase2_epochs": 14,
+    "total_epochs": 29,
+    "batch_size": 16,
+    "lr_phase1": 0.001,
+    "lr_phase2": 0.0001
+  },
+  "results": {
+    "accuracy": 93.33,
+    "precision": 90.62,
+    "recall": 96.67,
+    "f1_score": 93.55,
+    "roc_auc": 0.9867,
+    "confusion_matrix": {
+      "TN": 27,
+      "FP": 3,
+      "FN": 1,
+      "TP": 29
+    }
+  },
+  "targets_met": {
+    "accuracy_85pct": true,
+    "recall_90pct": true
+  },
+  "saved_models": [
+    "C:\\Users\\itsak\\OneDrive\\tb 1\\backend\\models\\tb_multimodal_final.keras",
+    "C:\\Users\\itsak\\OneDrive\\tb 1\\backend\\models\\tb_multimodal_final.h5",
+    "C:\\Users\\itsak\\OneDrive\\tb 1\\backend\\models\\tb_model_best.keras"
+  ],
+  "report_files": {
+    "training_curves": "C:\\Users\\itsak\\OneDrive\\tb 1\\backend\\training_reports\\training_curves.png",
+    "roc_curve": "C:\\Users\\itsak\\OneDrive\\tb 1\\backend\\training_reports\\roc_curve.png",
+    "confusion_matrix": "C:\\Users\\itsak\\OneDrive\\tb 1\\backend\\training_reports\\confusion_matrix.png",
+    "gradcam_dir": "C:\\Users\\itsak\\OneDrive\\tb 1\\backend\\training_reports\\gradcam"
+  }
+}

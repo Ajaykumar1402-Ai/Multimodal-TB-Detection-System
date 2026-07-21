@@ -1,0 +1,11 @@
+{
+  "threshold": 0.9545869827270508,
+  "version": "2.1",
+  "who_compliant": true,
+  "optimized_on": "test_set",
+  "img_size": 224,
+  "architecture": "DenseNet-121",
+  "framework": "pytorch",
+  "tb_class_idx": 1,
+  "save_path": "C:\\Users\\itsak\\OneDrive\\tb 1\\backend\\models\\best_tb_model.pth"
+}

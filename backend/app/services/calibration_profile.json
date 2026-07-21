@@ -1,0 +1,16 @@
+{
+    "version": "1.0.0",
+    "target_metrics": {
+        "sensitivity": 0.94,
+        "specificity": 0.89
+    },
+    "model_biases": {
+        "vit": 1.15,
+        "mobilenet": 0.95,
+        "resnet": 1.05
+    },
+    "anatomical_weights": {
+        "upper_lobes": 1.25,
+        "mid_and_lower": 1.0
+    }
+}

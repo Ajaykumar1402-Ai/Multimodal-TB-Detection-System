@@ -1,0 +1,19 @@
+{
+  "total": 814,
+  "normal": 440,
+  "tb": 374,
+  "splits": {
+    "train": {
+      "normal": 308,
+      "tb": 261
+    },
+    "val": {
+      "normal": 66,
+      "tb": 56
+    },
+    "test": {
+      "normal": 66,
+      "tb": 57
+    }
+  }
+}

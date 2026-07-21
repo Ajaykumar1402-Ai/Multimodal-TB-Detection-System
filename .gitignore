@@ -1,0 +1,14 @@
+node_modules/
+backend/venv/
+backend/data/cifar-10-batches-py/
+backend/data/*.tar.gz
+backend/data/train/
+backend/data/test/
+backend/data/val/
+backend/data/temp*/
+__pycache__/
+*.pth
+*.keras
+*.h5
+.pytest_cache/
+.env

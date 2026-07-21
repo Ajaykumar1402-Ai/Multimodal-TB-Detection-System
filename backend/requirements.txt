@@ -1,0 +1,13 @@
+fastapi
+uvicorn
+sqlalchemy
+pydantic
+python-multipart
+passlib[bcrypt]
+pyjwt
+fpdf2
+scikit-learn
+tensorflow
+pillow
+python-dotenv
+pytest
