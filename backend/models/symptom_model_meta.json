@@ -1,0 +1,53 @@
+{
+  "model_type": "XGBoost+MLP Ensemble",
+  "primary_model": "XGBoost",
+  "ensemble_weights": {
+    "primary": 0.6,
+    "mlp": 0.4
+  },
+  "features": [
+    "fever",
+    "cough_duration_weeks",
+    "weight_loss",
+    "night_sweats",
+    "sputum_test",
+    "genexpert_test"
+  ],
+  "n_features": 6,
+  "threshold": 0.5,
+  "dataset_size": 28280,
+  "data_source": "Mendeley TB Clinical + Semarang + Kaggle (CC BY 4.0)",
+  "split": {
+    "train": 19230,
+    "val": 3394,
+    "test": 5656
+  },
+  "metrics": {
+    "accuracy": 96.78,
+    "precision": 91.4,
+    "recall": 93.41,
+    "f1_score": 92.4,
+    "roc_auc": 0.991,
+    "cv_auc_mean": 0.9909,
+    "cv_auc_std": 0.0009,
+    "cv_recall_mean": 0.9441
+  },
+  "confusion_matrix": {
+    "TN": 4368,
+    "FP": 104,
+    "FN": 78,
+    "TP": 1106
+  },
+  "feature_importance": {
+    "fever": 1.5143,
+    "cough_duration_weeks": 1.8068,
+    "weight_loss": 1.4444,
+    "night_sweats": 1.1401,
+    "sputum_test": 0.8596,
+    "genexpert_test": 0.8678
+  },
+  "who_targets": {
+    "recall_90pct_met": true,
+    "auc_target_met": true
+  }
+}

@@ -14,3 +14,9 @@ __pycache__/
 .env
 
 *.zip
+
+# Clinical Symptom Model & Dataset Exclusions
+backend/data/clinical/
+*.pkl
+*.xlsx
+*.csv

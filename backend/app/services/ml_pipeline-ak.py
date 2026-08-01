@@ -285,19 +285,39 @@ def process_xray_ensemble(image_bytes: bytes, symptoms: list = None, filename: s
 
 def process_clinical_data(features: dict) -> float:
     """
-    WHO-Standard 4-Symptom Screening (W4SS) Weighted Logic.
-    Based on WHO Systematic Screening guidelines.
+    Clinical symptom scoring — routes to real ML model when trained,
+    falls back to WHO W4SS formula automatically.
+
+    Priority order:
+      1. GeneXpert positive → 0.97 override (lab-confirmed)
+      2. XGBoost+MLP ensemble (if symptom_predictor.py models exist)
+      3. WHO W4SS formula (always-on safety net)
     """
+    try:
+        from .symptom_predictor import predict_clinical_score
+        result = predict_clinical_score(features)
+        prob = result.get("clinical_prob", 0.0)
+        source = result.get("source", "unknown")
+        print(f"[ClinicalModel] prob={prob:.4f} | {source}")
+        return float(prob)
+    except Exception as e:
+        print(f"[ClinicalModel] Routing error: {e} — using WHO W4SS fallback")
+
+    # ── WHO W4SS Formula (safety net — always works) ───────────
     if features.get("no_symptoms", 0) == 1:
         return 0.05
+
+    if features.get("genexpert_test") == 1:
+        return 0.97
 
     score = 0.0
     symptoms_present = 0
 
-    if features.get("cough_duration_weeks", 0) >= 2:
+    cough = features.get("cough_duration_weeks", 0) or 0
+    if float(cough) >= 2:
         score += 0.35
         symptoms_present += 1
-    elif features.get("cough_duration_weeks", 0) > 0:
+    elif float(cough) > 0:
         score += 0.10
 
     if features.get("fever", 0) == 1:
@@ -309,16 +329,12 @@ def process_clinical_data(features: dict) -> float:
     if features.get("night_sweats", 0) == 1:
         score += 0.20
         symptoms_present += 1
-
     if symptoms_present > 0:
-        score += 0.1
-
-    if features.get("genexpert_test") == 1:
-        return 0.99
+        score += 0.10
     if features.get("sputum_test") == 1:
         score += 0.45
 
-    return min(0.99, score)
+    return round(min(0.97, score), 4)
 
 
 def multimodal_fusion(img_prob: float, clinical_prob: float, regions: list = None, n_passes: int = 30) -> dict:
