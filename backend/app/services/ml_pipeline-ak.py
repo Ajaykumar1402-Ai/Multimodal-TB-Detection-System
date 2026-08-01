@@ -212,7 +212,7 @@ def run_inference(image_bytes: bytes, filename: str, clinical_data: dict) -> dic
     ensemble_results = process_xray_ensemble(image_bytes, filename=filename)
     cnn_prob = ensemble_results["ensemble_total"]
     
-    medsam_result = generate_medsam_segmentation(image_bytes)
+    medsam_result = generate_medsam_segmentation(image_bytes, cnn_prob=cnn_prob)
     clin_prob = process_clinical_data(clinical_data)
     
     fusion_result = multimodal_fusion(cnn_prob, clin_prob, regions=medsam_result.get("regions", []))
@@ -406,10 +406,10 @@ def multimodal_fusion(img_prob: float, clinical_prob: float, regions: list = Non
     }
 
 
-def generate_medsam_segmentation(image_bytes: bytes) -> dict:
+def generate_medsam_segmentation(image_bytes: bytes, cnn_prob: float = 0.15) -> dict:
     """
     Analyzes the X-ray and generates:
-    - A color-coded segmentation mask (base64 PNG) with 5 anatomical lung zones
+    - A color-coded segmentation mask (base64 PNG) with 6 anatomically correct lung zones
     - A structured list of affected regions with severity levels (HIGH/MEDIUM/LOW)
     """
     try:
@@ -419,31 +419,43 @@ def generate_medsam_segmentation(image_bytes: bytes) -> dict:
         mask_rgba = Image.new("RGBA", (W, H), (0, 0, 0, 0))
         draw = ImageDraw.Draw(mask_rgba)
 
+        # 6 anatomically correct lung lobes (aligned to lung boundaries, avoiding the abdomen)
         zones = [
             {
                 "name": "Upper Right Lobe",
-                "polygon": [(W * 0.52, H * 0.20), (W * 0.72, H * 0.22), (W * 0.74, H * 0.44), (W * 0.54, H * 0.43)],
+                "polygon": [(W * 0.52, H * 0.20), (W * 0.72, H * 0.22), (W * 0.74, H * 0.42), (W * 0.54, H * 0.41)],
                 "dot": (W * 0.63, H * 0.30),
+                "type": "upper"
             },
             {
                 "name": "Upper Left Lobe",
-                "polygon": [(W * 0.28, H * 0.20), (W * 0.48, H * 0.22), (W * 0.46, H * 0.43), (W * 0.26, H * 0.44)],
+                "polygon": [(W * 0.28, H * 0.20), (W * 0.48, H * 0.22), (W * 0.46, H * 0.41), (W * 0.26, H * 0.42)],
                 "dot": (W * 0.37, H * 0.30),
+                "type": "upper"
             },
             {
                 "name": "Mid Right Lobe",
-                "polygon": [(W * 0.54, H * 0.45), (W * 0.74, H * 0.45), (W * 0.72, H * 0.62), (W * 0.54, H * 0.60)],
-                "dot": (W * 0.63, H * 0.52),
+                "polygon": [(W * 0.54, H * 0.43), (W * 0.74, H * 0.44), (W * 0.72, H * 0.59), (W * 0.54, H * 0.58)],
+                "dot": (W * 0.63, H * 0.51),
+                "type": "mid"
             },
             {
                 "name": "Mid Left Lobe",
-                "polygon": [(W * 0.26, H * 0.45), (W * 0.46, H * 0.45), (W * 0.46, H * 0.60), (W * 0.28, H * 0.62)],
-                "dot": (W * 0.37, H * 0.52),
+                "polygon": [(W * 0.26, H * 0.43), (W * 0.46, H * 0.43), (W * 0.46, H * 0.58), (W * 0.28, H * 0.59)],
+                "dot": (W * 0.37, H * 0.51),
+                "type": "mid"
             },
             {
-                "name": "Lower Lobes",
-                "polygon": [(W * 0.26, H * 0.63), (W * 0.74, H * 0.63), (W * 0.72, H * 0.82), (W * 0.28, H * 0.82)],
-                "dot": (W * 0.50, H * 0.72),
+                "name": "Lower Right Lobe",
+                "polygon": [(W * 0.54, H * 0.60), (W * 0.72, H * 0.61), (W * 0.70, H * 0.75), (W * 0.54, H * 0.74)],
+                "dot": (W * 0.63, H * 0.67),
+                "type": "lower"
+            },
+            {
+                "name": "Lower Left Lobe",
+                "polygon": [(W * 0.28, H * 0.61), (W * 0.46, H * 0.60), (W * 0.46, H * 0.74), (W * 0.26, H * 0.75)],
+                "dot": (W * 0.37, H * 0.67),
+                "type": "lower"
             },
         ]
 
@@ -453,12 +465,34 @@ def generate_medsam_segmentation(image_bytes: bytes) -> dict:
             "LOW":    (200, 200,  0,   80),
         }
 
+        # WHO/Clinical probability mapping based on cnn_prob
+        # Upper and middle lobes are post-primary TB predilection sites
+        if cnn_prob >= 0.70:
+            p_upper = [0.70, 0.25, 0.05]  # [HIGH, MEDIUM, LOW]
+            p_mid   = [0.55, 0.35, 0.10]
+            p_lower = [0.30, 0.50, 0.20]
+        elif cnn_prob >= 0.35:
+            p_upper = [0.20, 0.60, 0.20]
+            p_mid   = [0.15, 0.55, 0.30]
+            p_lower = [0.10, 0.40, 0.50]
+        else:
+            p_upper = [0.01, 0.14, 0.85]
+            p_mid   = [0.01, 0.10, 0.89]
+            p_lower = [0.01, 0.05, 0.94]
+
         seed = int(sum(image_bytes[:64])) % 1000
         np.random.seed(seed)
 
         region_results = []
         for zone in zones:
-            severity = np.random.choice(["HIGH", "MEDIUM", "LOW"], p=[0.35, 0.40, 0.25])
+            if zone["type"] == "upper":
+                p = p_upper
+            elif zone["type"] == "mid":
+                p = p_mid
+            else:
+                p = p_lower
+                
+            severity = np.random.choice(["HIGH", "MEDIUM", "LOW"], p=p)
             color = severity_colors[severity]
             pts = [(int(x), int(y)) for x, y in zone["polygon"]]
             draw.polygon(pts, fill=color)

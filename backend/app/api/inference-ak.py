@@ -93,7 +93,7 @@ async def predict_tb(
         cnn_prob = ensemble_results["ensemble_total"]
         
         # 2.5 Generate MedSAM segmentation with region classification
-        medsam_result = ml_pipeline.generate_medsam_segmentation(image_bytes)
+        medsam_result = ml_pipeline.generate_medsam_segmentation(image_bytes, cnn_prob=cnn_prob)
         medsam_mask_url = medsam_result.get("mask_url")
         affected_regions = medsam_result.get("regions", [])
         
